@@ -69,8 +69,21 @@ async function getSeasonStats(playerId) {
 
 leaderboardRoutes.get('/:statTerm', async (req, res) => {
     const statTerm = req.params.statTerm;
-    console.log(statTerm);
     let statsData = [];
+    let completedRequests = 0;
+
+    // Set headers for SSE
+    res.writeHead(200, {
+        'Content-Type': 'text/event-stream',
+        'Cache-Control': 'no-cache',
+        'Connection': 'keep-alive',
+    });
+
+    const updateProgress = () => {
+        const progress = Math.round((completedRequests / playerIdsCache.length) * 100);
+        res.write(`data: ${JSON.stringify({ progress })}\n\n`);
+    };
+
     const statsPromises = playerIdsCache.map(async (playerId) => {
         try {
             const playerInfo = await getPlayerDetails(playerId);
@@ -84,8 +97,10 @@ leaderboardRoutes.get('/:statTerm', async (req, res) => {
                 });
             }
         } catch (error) {
-            //console.log("fail");
             console.error(`Error fetching stats for player ID ${playerId}:`, error);
+        } finally {
+            completedRequests++;
+            updateProgress();
         }
     });
 
@@ -94,14 +109,15 @@ leaderboardRoutes.get('/:statTerm', async (req, res) => {
         statsData.sort((a, b) => b.statValue - a.statValue);
         const leaderboardSize = 100;
         statsData = statsData.slice(0, leaderboardSize);
-        //console.log(statsData);
         console.log("Done");
-        res.json({players: statsData, statTerm: statTerm });
+        res.write(`data: ${JSON.stringify({ complete: true, players: statsData, statTerm: statTerm })}\n\n`);
+        res.end();
     } catch (error) {
         console.error("Error processing player stats:", error);
         res.status(500).send("Error fetching player stats");
     }
 });
+
 
 
 

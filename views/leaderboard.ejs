@@ -43,7 +43,7 @@
                 </ul>
             </nav>
         </div>
-
+        <progress id="progressBar" value="0" max="100"></progress>
         <div class="table-responsive">
             <table class="table table-striped">
                 <!-- Table Header -->
@@ -56,6 +56,23 @@
 
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script>
+
+        const evtSource = new EventSource('/leaderboard/statTerm'); 
+        const progressBar = document.getElementById('progressBar');
+
+        evtSource.onmessage = function (event) {
+            const data = JSON.parse(event.data);
+
+            if (data.progress !== undefined) {
+                progressBar.value = data.progress;
+            }
+
+            if (data.complete) {
+                console.log('Update complete:', data.players);
+                evtSource.close();
+            }
+        };
+
         document.addEventListener('DOMContentLoaded', function () {
             const pageSize = 25;
             let currentPage = 1;
