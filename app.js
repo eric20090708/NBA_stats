@@ -2,7 +2,6 @@ import express from 'express';
 import axios from 'axios';
 import playerRoutes from './services/players.js';
 import leaderboardRoutes from './services/leaderboard.js';
-import 'dotenv/config';
 
 
 

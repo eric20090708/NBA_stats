@@ -74,14 +74,15 @@ a:visited {
 }
 
 .video-overlay {
-    position: absolute;
-    top: 30%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    color: #ffffff;
-    text-align: center;
-    z-index: 2;
-    font-family: 'Roboto', sans-serif;
+        position: relative;
+        top: 250px;
+        left: 50%;
+        transform: translateX(-50%);
+        /* Horizontally center the h1 */
+        z-index: 2;
+        text-align: center;
+        color: #ffffff;
+        font-family: 'Roboto', sans-serif;
 }
 
 main {
@@ -107,7 +108,7 @@ h1 {
 }
 
 /* Increased specificity with !important to ensure it overrides Bootstrap styles */
-.input-group .form-control.transparent-input {
+.input-group .form-control {
     background: transparent !important;
     border: 1px solid rgba(255, 255, 255, 0.1) !important;
     box-shadow: none !important;
@@ -129,4 +130,19 @@ h1 {
     background-color: #0056b3 !important;
     /* Darker blue on hover */
     border-color: #0056b3 !important;
+}
+
+.card {
+    position: relative;
+}
+
+.card-body {
+    margin-top: 50px;
+    position: relative;
+    z-index: 1;
+}
+
+.transparent-input {
+    background-color: rgba(255, 255, 255, 0.5);
+    /* Adjust opacity as needed */
 }
