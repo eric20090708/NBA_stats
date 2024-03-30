@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>League Leaderboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+    <link rel="stylesheet" href="/styles/leaderboard.css">
+</head>
+
+<body>
+    <div class="main">
+    <div class="container mt-5">
+        <select id="stat-select" class="form-select mb-3" aria-label="Stat term selector">
+            <option selected>Choose a stat term</option>
+            <option value="min">Min</option>
+            <option value="pts">Points</option>
+            <option value="fgm">FGM</option>
+            <option value="fga">FGA</option>
+            <option value="fg_pct">FG%</option>
+            <option value="fg3_pct">FG3%</option>
+            <option value="fg3m">FG3M</option>
+            <option value="fg3a">FG3A</option>
+            <option value="ftm">FTM</option>
+            <option value="fta">FTA</option>
+            <option value="ft_pct">FT%</option>
+            <option value="oreb">Off Reb</option>
+            <option value="dreb">Def Reb</option>
+            <option value="reb">Tot Reb</option>
+            <option value="ast">Assists</option>
+            <option value="pf">PFouls</option>
+            <option value="stl">Steals</option>
+            <option value="blk">Blocks</option>
+            <option value="turnover">Turnovers</option>
+        </select>
+    </div>
+    <div class="table-responsive">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Player</th>
+                    <th scope="col">Team</th>
+                    <th scope="col">value</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% var playersList=players || []; %>
+                <% playersList.forEach(function(player, index) { %>
+                    <tr>
+                        <th scope="row">
+                            <%= index + 1 %>
+                        </th>
+                        <td>
+                            <%= player.name %>
+                        </td>
+                        <td>
+                            <%= player.team %>
+                        </td>
+                        <td>
+                            <%= player.statValue %>
+                        </td>
+                    </tr>
+                    <% }); %>
+            </tbody>
+        </table>
+    </div>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.9.4/dist/umd/popper.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+    var statSelectElement = document.getElementById('stat-select');
+    if (statSelectElement) {
+        statSelectElement.addEventListener('change', function () {
+            var statTerm = this.value;
+            if (statTerm && statTerm !== 'Choose a stat term') {
+                fetch(`/leaderboard/${statTerm}`)
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Network response was not ok');
+                        }
+                        return response.json(); 
+                    })
+                    .then(data => {
+                        const tableBody = document.querySelector('.table-responsive tbody');
+                        if (!tableBody) {
+                            throw new Error('Table body not found in the document.');
+                        }
+
+                        // Clear the table body before adding new rows
+                        tableBody.innerHTML = '';
+
+                        // Append new rows to the table body
+                        data.players.forEach((player, index) => {
+                            const row = tableBody.insertRow();
+                            const cellNumber = row.insertCell(0);
+                            const cellName = row.insertCell(1);
+                            const cellTeam = row.insertCell(2);
+                            const cellStat = row.insertCell(3);
+                            
+                            cellNumber.textContent = index + 1;
+                            cellName.textContent = player.name; 
+                            cellTeam.textContent = player.team;
+                            cellStat.textContent = player.statValue;
+                        });
+                    })
+                    .catch(error => {
+                        console.error('Error fetching data:', error);
+                        const tableBody = document.querySelector('.table-responsive tbody');
+                        if (tableBody) {
+                            tableBody.innerHTML = '<tr><td colspan="4">An error occurred while fetching the data. Please try again later.</td></tr>';
+                        }
+                    });
+            }
+        });
+    } else {
+        console.error('Element with ID "stat-select" not found.');
+    }
+});
+
+    </script>
+
+</body>
+
+</html>

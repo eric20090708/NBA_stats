@@ -1,0 +1,28 @@
+body {
+    background-color: #fafafa;
+    color: rgb(144, 78, 231);
+    font-family: Arial, sans-serif;
+}
+
+.player-header {
+    text-align: center;
+    padding: 20px;
+}
+
+.player-stats {
+    display: flex;
+    justify-content: space-evenly;
+    margin-bottom: 30px;
+}
+
+.player-info {
+    display: flex;
+    justify-content: space-evenly;
+    flex-wrap: wrap;
+}
+
+.stat,
+.info {
+    text-align: center;
+    margin: 10px;
+}

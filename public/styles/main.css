@@ -1,0 +1,132 @@
+body {
+    height: 100%;
+    margin: 0;
+}
+
+.sidebar {
+    background-color: #e3f2fd;
+}
+
+.content-area {
+    padding: 20px;
+}
+
+.navbar {
+    background-color: #007bff;
+}
+
+a,
+a:visited {
+    color: #007bff;
+    /* Blue color for links */
+}
+
+.btn-primary {
+    background-color: #007bff;
+    border-color: #007bff;
+}
+
+.nav-pills .nav-link.active {
+    color: #fff;
+    background-color: #007bff;
+}
+
+.footer {
+    background-color: #f8f9fa;
+    color: #212529;
+}
+
+.top-bar .input-group {
+    width: 100%;
+    max-width: 500px;
+    margin: 0 auto;
+}
+
+@media (max-width: 768px) {
+    .video-overlay h1 {
+        font-size: 2rem;
+        /* Smaller font size on smaller screens */
+    }
+}
+
+@media (min-width: 992px) {
+}
+
+#background-video {
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    object-fit: cover;
+    z-index: -1;
+    /* Ensure the content goes above the video */
+}
+
+.content-container {
+    position: relative;
+    z-index: 1;
+}
+
+.sidebar {
+    z-index: 1;
+    min-height: 100vh;
+    background-color: #fff;
+}
+
+.video-overlay {
+    position: absolute;
+    top: 30%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: #ffffff;
+    text-align: center;
+    z-index: 2;
+    font-family: 'Roboto', sans-serif;
+}
+
+main {
+    z-index: 1; 
+    background: rgba(255, 255, 255, 0.1); /* Slightly transparent to show the video */
+}
+h1 {
+    font-size: 5rem;
+}
+
+.nav-link{
+    font-size: 1.5rem;
+}
+
+.search-container {
+    max-width: 500px;
+    /* Maximum width of the search container */
+    margin: auto;
+}
+
+.custom-margin {
+    margin-top: 20%;
+}
+
+/* Increased specificity with !important to ensure it overrides Bootstrap styles */
+.input-group .form-control.transparent-input {
+    background: transparent !important;
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+    box-shadow: none !important;
+}
+
+.input-group .form-control.transparent-input::placeholder {
+    color: rgba(255, 255, 255, 0.05) !important;
+    /* Light white color for placeholder */
+}
+
+/* Ensure the search button is not transparent and is visible */
+#button-search {
+    background-color: #007bff !important;
+    border-color: #007bff !important;
+    color: #fff !important;
+}
+
+#button-search:hover {
+    background-color: #0056b3 !important;
+    /* Darker blue on hover */
+    border-color: #0056b3 !important;
+}

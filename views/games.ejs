@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NBA Player Stats</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+
+<body>
+
+    <div class="container mt-5">
+        <h2 class="mb-3">LEAGUE ROSTER</h2>
+        <div id="playerStats">
+        </div>
+    </div>
+
+    <script>
+        const players = [
+            { name: 'Precious Achiuwa', team: 'NYK', number: 5, position: 'F', height: '6-8', weight: '243 lbs', college: 'Memphis', country: 'Nigeria' },
+        ];
+
+        function createTable(data) {
+            const table = document.createElement('table');
+            table.className = 'table table-hover';
+
+            const thead = table.createTHead();
+            const headerRow = thead.insertRow();
+
+            const headers = ['Player', 'Team', 'Number', 'Position', 'Height', 'Weight', 'Last Attended', 'Country'];
+            headers.forEach(headerText => {
+                const header = document.createElement('th');
+                header.textContent = headerText;
+                headerRow.appendChild(header);
+            });
+
+            const tbody = table.createTBody();
+
+            data.forEach(player => {
+                const row = tbody.insertRow();
+                row.insertCell().textContent = player.name;
+                row.insertCell().textContent = player.team;
+                row.insertCell().textContent = player.number;
+                row.insertCell().textContent = player.position;
+                row.insertCell().textContent = player.height;
+                row.insertCell().textContent = player.weight;
+                row.insertCell().textContent = player.college;
+                row.insertCell().textContent = player.country;
+            });
+
+            return table;
+        }
+
+        document.getElementById('playerStats').appendChild(createTable(players));
+    </script>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.7.9/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+</body>
+
+</html>
