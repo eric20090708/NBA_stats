@@ -118,7 +118,7 @@
                     row.insertCell().textContent = start + index + 1;
                     row.insertCell().textContent = player.name;
                     row.insertCell().textContent = player.team;
-                    row.insertCell().textContent = player.statValue;
+                    row.insertCell().textContent = player.statValue.toFixed(1);
                 });
             }
 
