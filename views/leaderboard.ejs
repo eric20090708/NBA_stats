@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>League Leaderboard</title>
+    <title>League LeaderBoard</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
     <link rel="stylesheet" href="/styles/leaderboard.css">
@@ -13,6 +13,10 @@
 <body>
     <div class="main">
         <div class="container mt-5">
+            <div id="progressBarContainer">
+                <div id="progressBar"></div>
+                <div id="loadingText">Data is loading...</div>
+            </div>
             <select id="stat-select" class="form-select mb-3" aria-label="Stat term selector">
                 <option selected>Choose a stat term</option>
                 <option value="min">Min</option>
@@ -35,15 +39,13 @@
                 <option value="blk">Blocks</option>
                 <option value="turnover">Turnovers</option>
             </select>
-
-            <nav aria-label="Page navigation example">
+            <nav aria-label="Page navigation">
                 <ul class="pagination">
                     <li class="page-item"><a class="page-link" href="#" id="previous-page">Previous</a></li>
                     <li class="page-item"><a class="page-link" href="#" id="next-page">Next</a></li>
                 </ul>
             </nav>
         </div>
-        <progress id="progressBar" value="0" max="100"></progress>
         <div class="table-responsive">
             <table class="table table-striped">
                 <!-- Table Header -->
@@ -57,31 +59,53 @@
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script>
 
-        const evtSource = new EventSource('/leaderboard/statTerm'); 
-        const progressBar = document.getElementById('progressBar');
-
-        evtSource.onmessage = function (event) {
-            const data = JSON.parse(event.data);
-
-            if (data.progress !== undefined) {
-                progressBar.value = data.progress;
-            }
-
-            if (data.complete) {
-                console.log('Update complete:', data.players);
-                evtSource.close();
-            }
-        };
-
         document.addEventListener('DOMContentLoaded', function () {
             const pageSize = 25;
             let currentPage = 1;
             let playersData = []; 
+            let statName = null;
+            let evtSource = null;
 
             const statSelectElement = document.getElementById('stat-select');
             const previousPageButton = document.getElementById('previous-page');
             const nextPageButton = document.getElementById('next-page');
             const tableBody = document.querySelector('.table-responsive tbody');
+            const progressBar = document.getElementById('progressBar');
+            const progressBarContainer = document.getElementById('progressBarContainer');
+
+            function updateProgressBar(progress) {
+                progressBar.style.width = progress + '%';
+                progressBar.textContent = progress.toFixed(0) + '%';
+                if (progress >= 100) {
+                    progressBar.textContent = '';
+                }
+            }
+
+            progressBar.style.display = 'none';
+            progressBarContainer.style.display = 'none';
+
+            function setupEventSource(statTerm) {
+                if (evtSource) {
+                    evtSource.close(); 
+                }
+                evtSource = new EventSource(`/leaderboard/progress/${statTerm}`);
+                evtSource.onmessage = function (event) {
+                    const data = JSON.parse(event.data);
+                    updateProgressBar(data.progress);
+                    //if(data.progress)
+                    if (data.progress >= 100) {
+                        setTimeout(() => {
+                            progressBar.style.display = 'none';
+                            progressBarContainer.style.display ='none';
+                        }, 500); 
+                        data.progress = 0;
+                        evtSource.close();
+                    }
+                };
+                evtSource.onerror = function (event) {
+                    console.error('EventSource encountered an error:', event);
+                };
+            }
 
             function renderPage(page) {
                 const start = (page - 1) * pageSize;
@@ -104,13 +128,36 @@
                 nextPageButton.parentElement.classList.toggle('disabled', currentPage === totalPages);
             }
 
+            function updateProgress(statTerm) {
+                fetch(`/leaderboard/progress/${statTerm}`)
+                    .then(data => {
+                        const progress = data.progress;
+                        document.getElementById('progressBar').style.width = progress + '%';
+                        if (progress < 100) {
+                            setTimeout(() => updateProgress(statTerm), 1000);
+                        }
+                    })
+                    .catch(error => console.error('Error fetching progress:', error));
+            }
+
             statSelectElement.addEventListener('change', function () {
                 const statTerm = this.value;
                 if (statTerm && statTerm !== 'Choose a stat term') {
+
+                    progressBarContainer.style.display = 'block';
+                    progressBar.style.width = '0%';
+                    progressBar.textContent = '0%';
+
+                    if (evtSource) {
+                        evtSource.close();
+                    }
+
+                    setupEventSource(statTerm);
                     fetch(`/leaderboard/${statTerm}`)
                         .then(response => response.json())
                         .then(data => {
                             playersData = data.players; 
+                            statName = data.statTerm;
                             currentPage = 1; 
                             renderPage(currentPage);
                             updatePagination();
