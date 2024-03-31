@@ -1,5 +1,6 @@
 import express from 'express';
 import axios from 'axios';
+import sanitizeHtml from 'sanitize-html';
 import playerRoutes from './services/players.js';
 import leaderboardRoutes from './services/leaderboard.js';
 
@@ -37,7 +38,8 @@ async function searchNBAPlayers(searchQuery) {
 }
 
 app.get('/players/search', async (req, res) => {
-    const searchQuery = req.query.search || '';
+    const searchTerm = req.query.search || '';
+    const searchQuery = sanitizeHtml(searchTerm);
     try {
         const response = await searchNBAPlayers(searchQuery);
         res.json(response.data);

@@ -137,11 +137,10 @@ leaderboardRoutes.get('/:statTerm', async (req, res) => {
         statsData.sort((a, b) => b.statValue - a.statValue);
         const leaderboardSize = 100;
         statsData = statsData.slice(0, leaderboardSize);
-        console.log("Done");
+        //console.log("Done");
         updateProgress(statTerm, totalRequests, totalRequests);
         res.json({ players: statsData, statTerm: statTerm });
     } catch (error) {
-        //console.error("Error processing player stats:", error);
         res.status(500).send("Error fetching player stats");
     }
 });

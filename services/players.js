@@ -41,6 +41,25 @@ async function getSeasonStats(playerId) {
     }
 }
 
+async function getTeammates(teamId) {
+    const options = {
+        method: 'GET',
+        url: 'http://api.balldontlie.io/v1/players',
+        params: {
+            team_ids: [teamId]
+        },
+        headers: {
+            'Authorization': '989f571f-050d-4c9c-ad48-45fa86251ea8',
+        }
+    };
+    try {
+        const response = await axios.request(options);
+        return response.data.data;
+    } catch (error) {
+        console.error(error);
+    }
+}
+
 playerRoutes.get('/:playerId', async (req, res) => {
     const playerId = req.params.playerId;
     try {
@@ -54,6 +73,26 @@ playerRoutes.get('/:playerId', async (req, res) => {
                 "fg_pct", "fg3_pct", "ft_pct", "min", "games_played"
             ],
         });
+    } catch (error) {
+        res.status(500).send('Failed to fetch player data');
+    }
+});
+
+playerRoutes.get('/json/:playerId', async (req, res) => {
+    const playerId = req.params.playerId;
+    try {
+        const playerDetails = await getPlayerDetails(playerId);
+        res.json({ players: playerDetails });
+    } catch (error) {
+        res.status(500).send('Failed to fetch player data');
+    }
+});
+
+playerRoutes.get('/team/:teamId', async (req, res) => {
+    const teamId = req.params.teamId;
+    try {
+        const teammates = await getTeammates(teamId);
+        res.json({ players: teammates });
     } catch (error) {
         res.status(500).send('Failed to fetch player data');
     }

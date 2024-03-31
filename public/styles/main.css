@@ -18,7 +18,6 @@ body {
 a,
 a:visited {
     color: #007bff;
-    /* Blue color for links */
 }
 
 .btn-primary {
@@ -38,18 +37,15 @@ a:visited {
 
 .top-bar .input-group {
     width: 100%;
-    max-width: 500px;
+    max-width: 300px;
     margin: 0 auto;
+    margin-bottom: 0;
 }
 
 @media (max-width: 768px) {
     .video-overlay h1 {
         font-size: 2rem;
-        /* Smaller font size on smaller screens */
     }
-}
-
-@media (min-width: 992px) {
 }
 
 #background-video {
@@ -59,7 +55,6 @@ a:visited {
     height: 100vh;
     object-fit: cover;
     z-index: -1;
-    /* Ensure the content goes above the video */
 }
 
 .content-container {
@@ -74,32 +69,31 @@ a:visited {
 }
 
 .video-overlay {
-        position: relative;
-        top: 250px;
-        left: 50%;
-        transform: translateX(-50%);
-        /* Horizontally center the h1 */
-        z-index: 2;
-        text-align: center;
-        color: #ffffff;
-        font-family: 'Roboto', sans-serif;
+    position: relative;
+    top: 250px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 2;
+    text-align: center;
+    color: #ffffff;
+    font-family: 'Roboto', sans-serif;
 }
 
 main {
-    z-index: 1; 
-    background: rgba(255, 255, 255, 0.1); /* Slightly transparent to show the video */
+    z-index: 1;
+    background: rgba(255, 255, 255, 0.1);
 }
+
 h1 {
     font-size: 5rem;
 }
 
-.nav-link{
+.nav-link {
     font-size: 1.5rem;
 }
 
 .search-container {
     max-width: 500px;
-    /* Maximum width of the search container */
     margin: auto;
 }
 
@@ -107,29 +101,25 @@ h1 {
     margin-top: 20%;
 }
 
-/* Increased specificity with !important to ensure it overrides Bootstrap styles */
 .input-group .form-control {
-    background: transparent !important;
-    border: 1px solid rgba(255, 255, 255, 0.1) !important;
-    box-shadow: none !important;
+    background: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: none;
 }
 
 .input-group .form-control.transparent-input::placeholder {
-    color: rgba(255, 255, 255, 0.05) !important;
-    /* Light white color for placeholder */
+    color: rgba(255, 255, 255, 0.5);
 }
 
-/* Ensure the search button is not transparent and is visible */
 #button-search {
-    background-color: #007bff !important;
-    border-color: #007bff !important;
-    color: #fff !important;
+    background-color: #007bff;
+    border-color: #007bff;
+    color: #fff;
 }
 
 #button-search:hover {
-    background-color: #0056b3 !important;
-    /* Darker blue on hover */
-    border-color: #0056b3 !important;
+    background-color: #0056b3;
+    border-color: #0056b3;
 }
 
 .card {
@@ -137,12 +127,11 @@ h1 {
 }
 
 .card-body {
-    margin-top: 50px;
+    margin-top: 10px;
     position: relative;
     z-index: 1;
 }
 
 .transparent-input {
     background-color: rgba(255, 255, 255, 0.5);
-    /* Adjust opacity as needed */
 }
